@@ -4,3 +4,9 @@ node_modules
 /.svelte-kit
 /package
 .env
+/terraform/.terraform/
+/terraform/.terraform.lock.hcl
+/terraform/terraform.tfstate
+/terraform/terraform.tfstate.backup
+/terraform/terraform-credentials.json
+/.idea/
