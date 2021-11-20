@@ -1,8 +1,9 @@
 {
-  "name": "svelte-kit-demo",
+  "name": "webshop",
   "version": "0.0.1",
   "scripts": {
     "dev": "svelte-kit dev",
+    "test": "echo TODO",
     "build": "svelte-kit build",
     "preview": "svelte-kit preview",
     "check": "svelte-check --tsconfig ./tsconfig.json",

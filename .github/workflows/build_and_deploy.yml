@@ -1,0 +1,33 @@
+name: Build & Deploy
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - name: Set up Node
+      uses: actions/setup-node@v2
+      with:
+        node-version: "16"
+    - run: npm ci
+    - run: npm run test
+    - run: npm run build
+    - run: npm prune --production
+    - run: echo "SERVICE_VERSION=$(git rev-list HEAD --count)" >> $GITHUB_ENV
+    - run: docker build -t wilts-webshop:${{ env.SERVICE_VERSION }} .
+    - run: docker push wilts-webshop:${{ env.SERVICE_VERSION }}
+    - name: Deploy to Cloud Run
+      id: deploy
+      uses: google-github-actions/deploy-cloudrun@main
+      with:
+        service: cloudrun-srv
+        image: wilts-webshop
+        credentials: ${{ secrets.GCP_CREDENTIALS }}
+    - name: Use Output
+      run: curl "${{ steps.deploy.outputs.url }}"
