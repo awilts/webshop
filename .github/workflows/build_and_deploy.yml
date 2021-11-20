@@ -29,5 +29,6 @@ jobs:
         service: cloudrun-srv
         image: wilts-webshop
         credentials: ${{ secrets.GCP_CREDENTIALS }}
+        region: europe-west3
     - name: Use Output
       run: curl "${{ steps.deploy.outputs.url }}"
