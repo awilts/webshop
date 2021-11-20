@@ -26,7 +26,7 @@ jobs:
     - run: echo "SERVICE_VERSION=$(git rev-list HEAD --count)-$(git rev-parse --short HEAD)" >> $GITHUB_ENV
     - run: docker build -t eu.gcr.io/${{ secrets.GCP_PROJECT }}/webshop:${{ env.SERVICE_VERSION }} .
     - name: Setup gcloud CLI
-      uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+      uses: google-github-actions/setup-gcloud@master
       with:
         service_account_key: ${{ secrets.GCP_CREDENTIALS }}
         project_id: ${{ secrets.GCP_PROJECT }}
