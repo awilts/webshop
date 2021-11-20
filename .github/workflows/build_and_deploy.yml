@@ -21,7 +21,7 @@ jobs:
     - run: npm prune --production
     - run: echo "SERVICE_VERSION=$(git rev-list HEAD --count)" >> $GITHUB_ENV
     - run: docker build -t wilts-webshop:${{ env.SERVICE_VERSION }} .
-    - run: docker push wilts-webshop:${{ env.SERVICE_VERSION }}
+#    - run: docker push wilts-webshop:${{ env.SERVICE_VERSION }}
     - name: Deploy to Cloud Run
       id: deploy
       uses: google-github-actions/deploy-cloudrun@main
