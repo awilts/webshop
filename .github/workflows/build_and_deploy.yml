@@ -11,6 +11,8 @@ jobs:
     - uses: actions/checkout@v2
       with:
         fetch-depth: 0
+
+    # Run Checks
     - name: Set up Node
       uses: actions/setup-node@v2
       with:
@@ -19,16 +21,26 @@ jobs:
     - run: npm run test
     - run: npm run build
     - run: npm prune --production
-    - run: echo "SERVICE_VERSION=$(git rev-list HEAD --count)" >> $GITHUB_ENV
-    - run: docker build -t wilts-webshop:${{ env.SERVICE_VERSION }} .
-#    - run: docker push wilts-webshop:${{ env.SERVICE_VERSION }}
+
+    # Build and Push Docker Image
+    - run: echo "SERVICE_VERSION=$(git rev-list HEAD --count)-$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+    - run: docker build -t eu.gcr.io/${{ secrets.GCP_PROJECT }}/webshop:${{ env.SERVICE_VERSION }} .
+    - name: Setup gcloud CLI
+      uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+      with:
+        service_account_key: ${{ secrets.GCP_CREDENTIALS }}
+        project_id: ${{ secrets.GCP_PROJECT }}
+        export_default_credentials: true
+    - run: gcloud auth configure-docker -q
+    - run: docker push eu.gcr.io/${{ secrets.GCP_PROJECT }}/webshop:${{ env.SERVICE_VERSION }}
+
+    # Deploy Docker Image to Cloud Run
     - name: Deploy to Cloud Run
       id: deploy
       uses: google-github-actions/deploy-cloudrun@main
       with:
         service: cloudrun-srv
         image: wilts-webshop
-        credentials: ${{ secrets.GCP_CREDENTIALS }}
         region: europe-west3
     - name: Use Output
       run: curl "${{ steps.deploy.outputs.url }}"
