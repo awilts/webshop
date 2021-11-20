@@ -40,7 +40,7 @@ jobs:
       uses: google-github-actions/deploy-cloudrun@main
       with:
         service: cloudrun-srv
-        image: wilts-webshop
+        image: eu.gcr.io/${{ secrets.GCP_PROJECT }}/webshop:${{ env.SERVICE_VERSION }}
         region: europe-west3
     - name: Use Output
       run: curl "${{ steps.deploy.outputs.url }}"
