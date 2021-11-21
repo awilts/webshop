@@ -39,7 +39,7 @@ jobs:
       id: deploy
       uses: google-github-actions/deploy-cloudrun@main
       with:
-        service: cloudrun-srv
+        service: cloudrun-webshop
         image: eu.gcr.io/${{ secrets.GCP_PROJECT }}/webshop:${{ env.SERVICE_VERSION }}
         region: europe-west3
         secrets: AUTH_KEY=AUTH_KEY:latest,AUTH_URL=AUTH_URL:latest,PASSWORD=PASSWORD:latest,USER=USER:latest,FFT_API_URL=FFT_API_URL:latest

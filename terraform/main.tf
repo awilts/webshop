@@ -8,7 +8,7 @@ terraform {
 }
 
 locals {
-  project  = "wilts-webshop-1"
+  project  = "wilts-webshop-2"
   location = "europe-west3"
 }
 
@@ -25,7 +25,8 @@ variable "gcp_service_list" {
   default = [
     "iam.googleapis.com",
     "cloudresourcemanager.googleapis.com",
-    "run.googleapis.com"
+    "run.googleapis.com",
+    "secretmanager.googleapis.com"
   ]
 }
 resource "google_project_service" "gcp_services" {
@@ -61,6 +62,11 @@ resource "google_project_iam_member" "gha-registry-service-agent" {
   role    = "roles/containerregistry.ServiceAgent"
   member  = "serviceAccount:${google_service_account.gha_service_account.email}"
 }
+resource "google_project_iam_member" "gha-secret-accessor" {
+  project = local.project
+  role    = "roles/secretmanager.secretAccessor"
+  member  = "serviceAccount:${google_service_account.gha_service_account.email}"
+}
 
 # Create Cloud Run with public access
 resource "google_container_registry" "registry" {
@@ -72,7 +78,7 @@ resource "google_container_registry" "registry" {
 resource "google_cloud_run_service" "webshop" {
   depends_on = [google_project_service.gcp_services]
 
-  name     = "cloudrun-srv"
+  name     = "cloudrun-webshop"
   location = local.location
 
   template {
