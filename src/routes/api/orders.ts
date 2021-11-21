@@ -68,21 +68,11 @@ export async function post(): Promise<any> {
             quantity: 1
         }]
     }
-    // const createdOrder = await createOrder(order)
+    const createdOrder = await createOrder(order)
 
     return {
         body: {
-            // ...createdOrder
-            status: "OPEN",
-            id: "e1cL8gA1WwNZWQqy9x9meU",
-            consumer:
-                {
-                    email: "peter.pan@gmail.com",
-                    created: "2021-11-21T17:15:41.092Z",
-                    orderDate: "2021-11-21T17:15:44.847Z",
-                    version: 1,
-                    lastModified: "2021-11-21T17:15:41.092Z",
-                }
+            ...createdOrder
         }
     };
 }

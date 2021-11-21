@@ -51,11 +51,11 @@ resource "google_project_iam_member" "gha-storage-admin" {
   role    = "roles/storage.admin"
   member  = "serviceAccount:${google_service_account.gha_service_account.email}"
 }
-#resource "google_project_iam_member" "gha-service-account-user" {
-#  project = local.project
-#  role    = "roles/iam.serviceAccountUser"
-#  member  = "serviceAccount:${google_service_account.gha_service_account.email}"
-#}
+resource "google_project_iam_member" "gha-service-account-user" {
+  project = local.project
+  role    = "roles/iam.serviceAccountUser"
+  member  = "serviceAccount:${google_service_account.gha_service_account.email}"
+}
 resource "google_project_iam_member" "gha-registry-service-agent" {
   project = local.project
   role    = "roles/containerregistry.ServiceAgent"
