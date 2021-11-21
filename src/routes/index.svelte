@@ -12,27 +12,22 @@
     import {Button, Header, TextInput} from "carbon-components-svelte";
     import JsonLoader from "../components/JsonLoader.svelte";
 
-    let orderPromise
     let orderLoading = false
-    let pickjobLoading = false
     let order
+    let pickjobLoading = false
     let pickjob
     let product = '';
 
     async function createOrder() {
         orderLoading = true
-        orderPromise = fetch('/api/orders', {
+        order = await fetch('/api/orders', {
             method: "POST",
             body: {
                 "product": product
             }
         }).then(res => res.json())
-            .then(orderResponse => {
-                orderLoading = false
-                order = orderResponse
-                getPickjob(orderResponse.id)
-                return orderResponse
-            })
+        orderLoading = false
+        await getPickjob(order.id)
     }
 
     async function getPickjob(orderId) {
