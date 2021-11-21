@@ -1,6 +1,6 @@
 import preprocess from 'svelte-preprocess';
 import adapter from '@sveltejs/adapter-node';
-import { optimizeImports } from "carbon-preprocess-svelte";
+import { optimizeImports } from 'carbon-preprocess-svelte';
 
 const config = {
 	preprocess: [optimizeImports(), preprocess()],

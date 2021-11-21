@@ -8,41 +8,41 @@ jobs:
   deploy:
     runs-on: ubuntu-20.04
     steps:
-    - uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
-    # Run Checks
-    - name: Set up Node
-      uses: actions/setup-node@v2
-      with:
-        node-version: "16"
-    - run: npm ci
-    - run: npm run test
-    - run: npm run build
-    - run: npm prune --production
+      # Run Checks
+      - name: Set up Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+      - run: npm ci
+      - run: npm run test
+      - run: npm run build
+      - run: npm prune --production
 
-    # Build and Push Docker Image
-    - run: echo "SERVICE_VERSION=$(git rev-list HEAD --count)-$(git rev-parse --short HEAD)" >> $GITHUB_ENV
-    - run: docker build -t eu.gcr.io/${{ secrets.GCP_PROJECT }}/webshop:${{ env.SERVICE_VERSION }} .
-    - name: Setup gcloud CLI
-      uses: google-github-actions/setup-gcloud@master
-      with:
-        service_account_key: ${{ secrets.GCP_CREDENTIALS }}
-        project_id: ${{ secrets.GCP_PROJECT }}
-        export_default_credentials: true
-    - run: gcloud auth configure-docker -q
-    - run: docker push eu.gcr.io/${{ secrets.GCP_PROJECT }}/webshop:${{ env.SERVICE_VERSION }}
+      # Build and Push Docker Image
+      - run: echo "SERVICE_VERSION=$(git rev-list HEAD --count)-$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+      - run: docker build -t eu.gcr.io/${{ secrets.GCP_PROJECT }}/webshop:${{ env.SERVICE_VERSION }} .
+      - name: Setup gcloud CLI
+        uses: google-github-actions/setup-gcloud@master
+        with:
+          service_account_key: ${{ secrets.GCP_CREDENTIALS }}
+          project_id: ${{ secrets.GCP_PROJECT }}
+          export_default_credentials: true
+      - run: gcloud auth configure-docker -q
+      - run: docker push eu.gcr.io/${{ secrets.GCP_PROJECT }}/webshop:${{ env.SERVICE_VERSION }}
 
-    # Deploy Docker Image to Cloud Run
-    - name: Deploy to Cloud Run
-      id: deploy
-      uses: google-github-actions/deploy-cloudrun@main
-      with:
-        service: cloudrun-webshop
-        image: eu.gcr.io/${{ secrets.GCP_PROJECT }}/webshop:${{ env.SERVICE_VERSION }}
-        region: europe-west3
-        secrets: AUTH_KEY=auth-key:latest,AUTH_URL=auth-url:latest,PASSWORD=password:latest,USER=user:latest,FFT_API_URL=fft-api-url:latest
-        flags: "--allow-unauthenticated"
-    - name: Use Output
-      run: curl "${{ steps.deploy.outputs.url }}"
+      # Deploy Docker Image to Cloud Run
+      - name: Deploy to Cloud Run
+        id: deploy
+        uses: google-github-actions/deploy-cloudrun@main
+        with:
+          service: cloudrun-webshop
+          image: eu.gcr.io/${{ secrets.GCP_PROJECT }}/webshop:${{ env.SERVICE_VERSION }}
+          region: europe-west3
+          secrets: AUTH_KEY=auth-key:latest,AUTH_URL=auth-url:latest,PASSWORD=password:latest,USER=user:latest,FFT_API_URL=fft-api-url:latest
+          flags: '--allow-unauthenticated'
+      - name: Use Output
+        run: curl "${{ steps.deploy.outputs.url }}"
