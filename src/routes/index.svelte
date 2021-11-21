@@ -1,4 +1,10 @@
-<h1>Welcome to the Webshop</h1>
+<style>
+    .headline{
+        background-color: #1386d2;
+    }
+</style>
+
+<h1 class="headline">Welcome to the Webshop</h1>
 
 <button on:click={createOrder}>Submit stuff</button>
 
