@@ -20,9 +20,9 @@ provider "google" {
 
 #enable required services
 variable "gcp_service_list" {
-  description ="The list of apis necessary for the project"
-  type = list(string)
-  default = [
+  description = "The list of apis necessary for the project"
+  type        = list(string)
+  default     = [
     "iam.googleapis.com",
     "cloudresourcemanager.googleapis.com",
     "run.googleapis.com",
@@ -31,8 +31,8 @@ variable "gcp_service_list" {
 }
 resource "google_project_service" "gcp_services" {
   for_each = toset(var.gcp_service_list)
-  project = local.project
-  service = each.key
+  project  = local.project
+  service  = each.key
 }
 
 # Create Github Action Account with permissions
@@ -75,33 +75,123 @@ resource "google_container_registry" "registry" {
   project  = local.project
   location = "EU"
 }
-resource "google_cloud_run_service" "webshop" {
-  depends_on = [google_project_service.gcp_services]
+#resource "google_cloud_run_service" "webshop" {
+#  depends_on = [google_project_service.gcp_services]
+#
+#  name     = "cloudrun-webshop-2"
+#  location = local.location
+#
+#  template {
+#    spec {
+#      containers {
+#        image = "us-docker.pkg.dev/cloudrun/container/hello"
+#      }
+#    }
+#  }
+#}
+#data "google_iam_policy" "noauth" {
+#  binding {
+#    role    = "roles/run.invoker"
+#    members = [
+#      "allUsers",
+#    ]
+#  }
+#}
+#resource "google_cloud_run_service_iam_policy" "noauth" {
+#  depends_on  = [google_project_service.gcp_services]
+#  location    = google_cloud_run_service.webshop.location
+#  project     = google_cloud_run_service.webshop.project
+#  service     = google_cloud_run_service.webshop.name
+#  policy_data = data.google_iam_policy.noauth.policy_data
+#}
 
-  name     = "cloudrun-webshop"
-  location = local.location
+# secrets
+data "google_project" "project" {
+}
 
-  template {
-    spec {
-      containers {
-        image = "us-docker.pkg.dev/cloudrun/container/hello"
-      }
-    }
+resource "google_secret_manager_secret" "auth-key" {
+  secret_id = "auth-key"
+
+  replication {
+    automatic = true
   }
 }
-data "google_iam_policy" "noauth" {
-  binding {
-    role    = "roles/run.invoker"
-    members = [
-      "allUsers",
-    ]
+resource "google_secret_manager_secret_version" "secret-version-data-auth-key" {
+  secret      = google_secret_manager_secret.auth-key.id
+  secret_data = "dummy"
+}
+resource "google_secret_manager_secret_iam_member" "secret-access-auth-key" {
+  project    = data.google_project.project.id
+  secret_id = google_secret_manager_secret.auth-key.id
+  role       = "roles/secretmanager.secretAccessor"
+  member     = "serviceAccount:${data.google_project.project.number}-compute@developer.gserviceaccount.com"
+}
+
+resource "google_secret_manager_secret" "auth-url" {
+  secret_id = "auth-url"
+  replication {
+    automatic = true
   }
 }
-resource "google_cloud_run_service_iam_policy" "noauth" {
-  depends_on = [google_project_service.gcp_services]
+resource "google_secret_manager_secret_version" "secret-version-data-auth-url" {
+  secret      = google_secret_manager_secret.auth-url.id
+  secret_data = "dummy"
+}
+resource "google_secret_manager_secret_iam_member" "secret-access-auth-url" {
+  project    = data.google_project.project.id
+  secret_id = google_secret_manager_secret.auth-url.id
+  role       = "roles/secretmanager.secretAccessor"
+  member     = "serviceAccount:${data.google_project.project.number}-compute@developer.gserviceaccount.com"
+}
 
-  location = google_cloud_run_service.webshop.location
-  project  = google_cloud_run_service.webshop.project
-  service  = google_cloud_run_service.webshop.name
-  policy_data = data.google_iam_policy.noauth.policy_data
+
+resource "google_secret_manager_secret" "password" {
+  secret_id = "password"
+  replication {
+    automatic = true
+  }
+}
+resource "google_secret_manager_secret_version" "secret-version-data-password" {
+  secret      = google_secret_manager_secret.password.id
+  secret_data = "dummy"
+}
+resource "google_secret_manager_secret_iam_member" "secret-access-password" {
+  project    = data.google_project.project.id
+  secret_id = google_secret_manager_secret.password.id
+  role       = "roles/secretmanager.secretAccessor"
+  member     = "serviceAccount:${data.google_project.project.number}-compute@developer.gserviceaccount.com"
+}
+
+resource "google_secret_manager_secret" "user" {
+  secret_id = "user"
+  replication {
+    automatic = true
+  }
+}
+resource "google_secret_manager_secret_version" "secret-version-data-user" {
+  secret      = google_secret_manager_secret.user.id
+  secret_data = "dummy"
+}
+resource "google_secret_manager_secret_iam_member" "secret-access-user" {
+  project    = data.google_project.project.id
+  secret_id = google_secret_manager_secret.user.id
+  role       = "roles/secretmanager.secretAccessor"
+  member     = "serviceAccount:${data.google_project.project.number}-compute@developer.gserviceaccount.com"
+}
+
+resource "google_secret_manager_secret" "fft-api-url" {
+  secret_id = "fft-api-url"
+  replication {
+    automatic = true
+  }
+}
+resource "google_secret_manager_secret_version" "secret-version-data-fft-api-url" {
+  secret      = google_secret_manager_secret.fft-api-url.id
+  secret_data = "dummy"
+}
+resource "google_secret_manager_secret_iam_member" "secret-access-fft-api-url" {
+  project    = data.google_project.project.id
+  secret_id = google_secret_manager_secret.fft-api-url.id
+  role       = "roles/secretmanager.secretAccessor"
+  member     = "serviceAccount:${data.google_project.project.number}-compute@developer.gserviceaccount.com"
 }
