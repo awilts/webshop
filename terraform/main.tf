@@ -75,35 +75,6 @@ resource "google_container_registry" "registry" {
   project  = local.project
   location = "EU"
 }
-#resource "google_cloud_run_service" "webshop" {
-#  depends_on = [google_project_service.gcp_services]
-#
-#  name     = "cloudrun-webshop-2"
-#  location = local.location
-#
-#  template {
-#    spec {
-#      containers {
-#        image = "us-docker.pkg.dev/cloudrun/container/hello"
-#      }
-#    }
-#  }
-#}
-#data "google_iam_policy" "noauth" {
-#  binding {
-#    role    = "roles/run.invoker"
-#    members = [
-#      "allUsers",
-#    ]
-#  }
-#}
-#resource "google_cloud_run_service_iam_policy" "noauth" {
-#  depends_on  = [google_project_service.gcp_services]
-#  location    = google_cloud_run_service.webshop.location
-#  project     = google_cloud_run_service.webshop.project
-#  service     = google_cloud_run_service.webshop.name
-#  policy_data = data.google_iam_policy.noauth.policy_data
-#}
 
 # secrets
 data "google_project" "project" {
