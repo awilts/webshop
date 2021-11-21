@@ -50,7 +50,7 @@ async function createOrder(order: Order): Promise<OrderResponse> {
     }).then(res => res.json());
 }
 
-export async function post({params}): Promise<any> {
+export async function post(): Promise<any> {
 
     await sleep(1000)
 
@@ -68,11 +68,21 @@ export async function post({params}): Promise<any> {
             quantity: 1
         }]
     }
-    const createdOrder = await createOrder(order)
+    // const createdOrder = await createOrder(order)
 
     return {
         body: {
-            createdOrder: createdOrder.id,
+            // ...createdOrder
+            status: "OPEN",
+            id: "e1cL8gA1WwNZWQqy9x9meU",
+            consumer:
+                {
+                    email: "peter.pan@gmail.com",
+                    created: "2021-11-21T17:15:41.092Z",
+                    orderDate: "2021-11-21T17:15:44.847Z",
+                    version: 1,
+                    lastModified: "2021-11-21T17:15:41.092Z",
+                }
         }
     };
 }
