@@ -16,6 +16,8 @@
     "@sveltejs/kit": "next",
     "@typescript-eslint/eslint-plugin": "^4.31.1",
     "@typescript-eslint/parser": "^4.31.1",
+    "carbon-components-svelte": "^0.50.1",
+    "carbon-preprocess-svelte": "^0.6.0",
     "env-cmd": "^10.1.0",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
@@ -24,7 +26,6 @@
     "prettier-plugin-svelte": "^2.4.0",
     "svelte": "^3.42.6",
     "svelte-check": "^2.2.6",
-    "svelte-loading-spinners": "^0.1.7",
     "svelte-preprocess": "^4.9.4",
     "tslib": "^2.3.1",
     "typescript": "^4.4.3"
