@@ -7,15 +7,36 @@ terraform {
   }
 }
 
+variable "AUTH_KEY" {
+  type        = string
+  sensitive   = true
+}
+variable "AUTH_URL" {
+  type        = string
+  sensitive   = true
+}
+variable "PASSWORD" {
+  type        = string
+  sensitive   = true
+}
+variable "USER" {
+  type        = string
+  sensitive   = true
+}
+variable "FFT_API_URL" {
+  type        = string
+  sensitive   = true
+}
+
 locals {
   project          = "wilts-webshop-2"
   location         = "europe-west3"
   secrets          = {
-    auth-key    = "dummy"
-    auth-url    = "dummy"
-    fft-api-url = "dummy"
-    password    = "dummy"
-    user        = "dummy"
+    auth-key    = var.AUTH_KEY
+    auth-url    = var.AUTH_URL
+    fft-api-url = var.FFT_API_URL
+    password    = var.PASSWORD
+    user        = var.USER
   }
   gcp_service_list = [
     "iam.googleapis.com",

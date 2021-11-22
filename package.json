@@ -2,7 +2,7 @@
 	"name": "webshop",
 	"version": "0.0.1",
 	"scripts": {
-		"dev": "env-cmd svelte-kit dev",
+		"dev": "svelte-kit dev",
 		"test": "echo TODO",
 		"build": "svelte-kit build",
 		"preview": "svelte-kit preview",
@@ -18,7 +18,6 @@
 		"@typescript-eslint/parser": "^4.31.1",
 		"carbon-components-svelte": "^0.50.1",
 		"carbon-preprocess-svelte": "^0.6.0",
-		"env-cmd": "^10.1.0",
 		"eslint": "^7.32.0",
 		"eslint-config-prettier": "^8.3.0",
 		"eslint-plugin-svelte3": "^3.2.1",

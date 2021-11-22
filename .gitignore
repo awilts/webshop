@@ -3,7 +3,7 @@ node_modules
 /build
 /.svelte-kit
 /package
-.env
+.envrc
 /terraform/.terraform/
 /terraform/.terraform.lock.hcl
 /terraform/terraform.tfstate
