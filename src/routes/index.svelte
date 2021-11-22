@@ -29,7 +29,6 @@
 		);
 		if (pickjobResponse?.total > 0) {
 			pickjobLoading = false;
-			//TODO: type
 			pickjob = pickjobResponse.pickjobs[0];
 			return;
 		}
