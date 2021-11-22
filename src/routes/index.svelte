@@ -1,7 +1,7 @@
 <script lang="ts">
 	import 'carbon-components-svelte/css/white.css';
 	import { sleep } from '../sleep';
-	import { Button, Header, TextInput } from 'carbon-components-svelte';
+	import { Button,  TextInput } from 'carbon-components-svelte';
 	import JsonLoader from '../components/JsonLoader.svelte';
 	import type { OrderResponse } from './api/orders';
 
@@ -40,7 +40,7 @@
 </script>
 
 <div style="margin: 0 auto; max-width: 700px">
-	<Header company="Wilts" platformName="Webshop" />
+<!--	<Header company="Wilts" platformName="Webshop" />-->
 	<TextInput
 		style="margin: 45px 0 15px"
 		bind:value={product}

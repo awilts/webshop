@@ -4,13 +4,13 @@ import type { ServerRequest } from '@sveltejs/kit/types/hooks';
 export interface PickjobResponse {
 	total: number;
 	pickjobs: {
-		created: string
-		facilityRef: string
-		id: string
-		lastModified: string
-		orderRef: string
-		status: string
-		version: number
+		created: string;
+		facilityRef: string;
+		id: string;
+		lastModified: string;
+		orderRef: string;
+		status: string;
+		version: number;
 	}[];
 }
 
