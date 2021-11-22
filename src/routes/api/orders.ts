@@ -1,5 +1,4 @@
 import { getAuthToken } from '../../getAuthToken';
-import { sleep } from '../../sleep';
 
 interface Order {
 	orderDate: string;
@@ -51,8 +50,6 @@ async function createOrder(order: Order): Promise<OrderResponse> {
 }
 
 export async function post(): Promise<{ body: OrderResponse }> {
-	await sleep(1000);
-
 	const order: Order = {
 		orderDate: new Date().toISOString(),
 		consumer: {

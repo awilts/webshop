@@ -1,5 +1,4 @@
 import { getAuthToken } from '../../getAuthToken';
-import { sleep } from '../../sleep';
 import type { ServerRequest } from '@sveltejs/kit/types/hooks';
 
 export interface PickjobResponse {
@@ -22,9 +21,6 @@ async function getPickjobs(orderId: string) {
 
 /** @type {import('@sveltejs/kit').RequestHandler} */
 export async function get({ query }: ServerRequest): Promise<{ body: PickjobResponse }> {
-	console.log('loading pickjobs');
-	await sleep(1000);
-
 	const orderId = query.get('orderId');
 	const pickjobs = await getPickjobs(orderId);
 	return {
