@@ -19,7 +19,6 @@
     "@types/jest": "^27.0.3",
     "@typescript-eslint/eslint-plugin": "^4.31.1",
     "@typescript-eslint/parser": "^4.31.1",
-    "carbon-components-svelte": "^0.50.1",
     "carbon-preprocess-svelte": "^0.6.0",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
@@ -31,6 +30,7 @@
     "svelte-check": "^2.2.6",
     "svelte-jester": "^2.1.5",
     "svelte-json-tree": "^0.1.0",
+    "svelte-loading-spinners": "^0.1.7",
     "svelte-preprocess": "^4.9.4",
     "ts-jest": "^27.0.7",
     "tslib": "^2.3.1",
@@ -53,13 +53,6 @@
         }
       ],
       "^.+\\.ts$": "ts-jest"
-    },
-    "moduleFileExtensions": ["ts",  "js", "json", "svelte"],
-    "moduleNameMapper": {
-      "^.+\\.(css|less|scss)$": "<rootDir>/test/resources/cssStub.css"
-    },
-    "transformIgnorePatterns": [
-      "/node_modules/(?!(carbon-components-svelte)/)"
-    ]
+    }
   }
 }

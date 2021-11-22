@@ -1,17 +1,16 @@
 <script>
-	import { Loading, Tile } from 'carbon-components-svelte';
 	import JSONTree from 'svelte-json-tree';
-
+	import { Jumper } from 'svelte-loading-spinners'
 	export let objectName;
 	export let isLoading;
 	export let value;
 </script>
 
 <p>{objectName}:</p>
-<Tile style="margin: 0  0 15px">
+<div style="margin: 0  0 15px">
 	{#if isLoading}
-		<Loading withOverlay={false} small />
+		<Jumper size="60" color="#FF3E00" unit="px" duration="1s"/>
 	{:else if value}
 		<JSONTree {value} />
 	{/if}
-</Tile>
+</div>
