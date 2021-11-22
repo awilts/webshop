@@ -4,7 +4,13 @@ import type { ServerRequest } from '@sveltejs/kit/types/hooks';
 export interface PickjobResponse {
 	total: number;
 	pickjobs: {
-		todo: string;
+		created: string
+		facilityRef: string
+		id: string
+		lastModified: string
+		orderRef: string
+		status: string
+		version: number
 	}[];
 }
 
@@ -19,7 +25,6 @@ async function getPickjobs(orderId: string) {
 	}).then((res) => res.json());
 }
 
-/** @type {import('@sveltejs/kit').RequestHandler} */
 export async function get({ query }: ServerRequest): Promise<{ body: PickjobResponse }> {
 	const orderId = query.get('orderId');
 	const pickjobs = await getPickjobs(orderId);
