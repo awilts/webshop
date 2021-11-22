@@ -7,18 +7,29 @@ terraform {
   }
 }
 
-data "google_project" "project" {}
-
 locals {
-  project  = "wilts-webshop-2"
-  location = "europe-west3"
-  secrets  = {
+  project          = "wilts-webshop-2"
+  location         = "europe-west3"
+  secrets          = {
     auth-key    = "dummy"
     auth-url    = "dummy"
     fft-api-url = "dummy"
     password    = "dummy"
     user        = "dummy"
   }
+  gcp_service_list = [
+    "iam.googleapis.com",
+    "cloudresourcemanager.googleapis.com",
+    "run.googleapis.com",
+    "secretmanager.googleapis.com"
+  ]
+  gha-roles        = [
+    "roles/run.admin",
+    "roles/storage.admin",
+    "roles/iam.serviceAccountUser",
+    "roles/containerregistry.ServiceAgent",
+    "roles/secretmanager.secretAccessor"
+  ]
 }
 
 provider "google" {
@@ -27,62 +38,30 @@ provider "google" {
   region      = local.location
 }
 
-#enable required services
-variable "gcp_service_list" {
-  description = "The list of apis necessary for the project"
-  type        = list(string)
-  default     = [
-    "iam.googleapis.com",
-    "cloudresourcemanager.googleapis.com",
-    "run.googleapis.com",
-    "secretmanager.googleapis.com"
-  ]
-}
 resource "google_project_service" "gcp_services" {
-  for_each = toset(var.gcp_service_list)
+  for_each = toset(local.gcp_service_list)
   project  = local.project
   service  = each.key
 }
 
+resource "google_container_registry" "registry" {
+  depends_on = [google_project_service.gcp_services]
+  project    = local.project
+  location   = "EU"
+}
+
 # Create Github Action Account with permissions
 resource "google_service_account" "gha_service_account" {
-  depends_on = [google_project_service.gcp_services]
-
+  depends_on   = [google_project_service.gcp_services]
+  project      = local.project
   account_id   = "gh-actions-account"
   display_name = "Service Account for Deployments from Github Actions"
 }
-resource "google_project_iam_member" "gha-run-admin" {
-  project = local.project
-  role    = "roles/run.admin"
-  member  = "serviceAccount:${google_service_account.gha_service_account.email}"
-}
-resource "google_project_iam_member" "gha-storage-admin" {
-  project = local.project
-  role    = "roles/storage.admin"
-  member  = "serviceAccount:${google_service_account.gha_service_account.email}"
-}
-resource "google_project_iam_member" "gha-service-account-user" {
-  project = local.project
-  role    = "roles/iam.serviceAccountUser"
-  member  = "serviceAccount:${google_service_account.gha_service_account.email}"
-}
-resource "google_project_iam_member" "gha-registry-service-agent" {
-  project = local.project
-  role    = "roles/containerregistry.ServiceAgent"
-  member  = "serviceAccount:${google_service_account.gha_service_account.email}"
-}
-resource "google_project_iam_member" "gha-secret-accessor" {
-  project = local.project
-  role    = "roles/secretmanager.secretAccessor"
-  member  = "serviceAccount:${google_service_account.gha_service_account.email}"
-}
-
-# Create Cloud Run with public access
-resource "google_container_registry" "registry" {
-  depends_on = [google_project_service.gcp_services]
-
+resource "google_project_iam_member" "gha-roles" {
+  for_each = toset(local.gha-roles)
   project  = local.project
-  location = "EU"
+  role     = each.key
+  member   = "serviceAccount:${google_service_account.gha_service_account.email}"
 }
 
 # secrets
@@ -98,6 +77,7 @@ resource "google_secret_manager_secret_version" "secret-version-data" {
   secret      = google_secret_manager_secret.secret[each.key].id
   secret_data = each.value
 }
+data "google_project" "project" {}
 resource "google_secret_manager_secret_iam_member" "secret-access" {
   for_each  = local.secrets
   secret_id = google_secret_manager_secret.secret[each.key].id
