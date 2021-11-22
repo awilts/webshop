@@ -1,8 +1,9 @@
 <script lang="ts">
+	import 'carbon-components-svelte/css/white.css';
 	import { sleep } from '../sleep';
+	import { Button, Header, TextInput } from 'carbon-components-svelte';
 	import JsonLoader from '../components/JsonLoader.svelte';
 	import type { OrderResponse } from './api/orders';
-	import type {PickjobResponse} from "./api/pickjobs";
 
 	let orderLoading = false;
 	let order: OrderResponse;
@@ -24,11 +25,12 @@
 
 	async function getPickjob(orderId) {
 		pickjobLoading = true;
-		const pickjobResponse: PickjobResponse = await fetch('/api/pickjobs?orderId=' + orderId).then((res) =>
+		const pickjobResponse = await fetch('/api/pickjobs?orderId=' + orderId).then((res) =>
 			res.json()
 		);
 		if (pickjobResponse?.total > 0) {
 			pickjobLoading = false;
+			//TODO: type
 			pickjob = pickjobResponse.pickjobs[0];
 			return;
 		}
@@ -36,14 +38,15 @@
 		await getPickjob(orderId);
 	}
 </script>
-
 <div style="margin: 0 auto; max-width: 700px">
-	<input
+	<Header company="Wilts" platformName="Webshop" />
+	<TextInput
 		style="margin: 45px 0 15px"
 		bind:value={product}
+		labelText="Product"
 		placeholder="Enter some product..."
 	/>
-	<button style="margin: 15px 0" disabled={!product} on:click={createOrder}>Create Order</button>
+	<Button style="margin: 15px 0" disabled={!product} on:click={createOrder}>Create Order</Button>
 	<JsonLoader objectName="Order" isLoading={orderLoading} value={order} />
 	<JsonLoader objectName="Pickjob" isLoading={pickjobLoading} value={pickjob} />
 </div>

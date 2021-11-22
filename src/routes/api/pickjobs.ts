@@ -4,17 +4,18 @@ import type { ServerRequest } from '@sveltejs/kit/types/hooks';
 export interface PickjobResponse {
 	total: number;
 	pickjobs: {
-		created: string;
-		facilityRef: string;
-		id: string;
-		lastModified: string;
-		orderRef: string;
-		status: string;
-		version: number;
+		created: string
+		facilityRef: string
+		id: string
+		lastModified: string
+		orderRef: string
+		status: string
+		version: number
 	}[];
 }
 
 async function getPickjobs(orderId: string) {
+	console.log(2);
 	const authToken = await getAuthToken();
 	return await fetch(process.env['FFT_API_URL'] + 'pickjobs?orderRef=' + orderId, {
 		method: 'GET',

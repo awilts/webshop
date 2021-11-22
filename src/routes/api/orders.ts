@@ -1,5 +1,5 @@
 import { getAuthToken } from '../../getAuthToken';
-import type { ServerRequest } from '@sveltejs/kit/types/hooks';
+import type {ServerRequest} from "@sveltejs/kit/types/hooks";
 
 interface Order {
 	orderDate: string;
@@ -39,6 +39,7 @@ function getDefaultAddress(): Address {
 }
 
 async function createOrder(order: Order): Promise<OrderResponse> {
+	console.log(1);
 	const authToken = await getAuthToken();
 	return await fetch(process.env['FFT_API_URL'] + 'orders', {
 		method: 'POST',
@@ -50,7 +51,7 @@ async function createOrder(order: Order): Promise<OrderResponse> {
 	}).then((res) => res.json());
 }
 
-export async function post({ body }: ServerRequest): Promise<{ body: OrderResponse }> {
+export async function post({body}: ServerRequest): Promise<{ body: OrderResponse }> {
 	const order: Order = {
 		orderDate: new Date().toISOString(),
 		consumer: {
@@ -61,7 +62,7 @@ export async function post({ body }: ServerRequest): Promise<{ body: OrderRespon
 			{
 				article: {
 					tenantArticleId: '1',
-					title: JSON.parse(body as string)['product'] //TODO: einfacher?
+					title: JSON.parse(body as string)["product"] //TODO: einfacher?
 				},
 				quantity: 1
 			}

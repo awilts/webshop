@@ -10,3 +10,4 @@ node_modules
 /terraform/terraform.tfstate.backup
 /terraform/terraform-credentials.json
 /.idea/
+/cypress/plugins/
