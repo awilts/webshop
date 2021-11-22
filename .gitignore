@@ -11,3 +11,5 @@ node_modules
 /terraform/terraform-credentials.json
 /.idea/
 /cypress/plugins/
+/cypress/videos/
+/cypress/downloads/

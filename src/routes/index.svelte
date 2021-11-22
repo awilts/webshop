@@ -4,6 +4,7 @@
 	import { Button, Header, TextInput } from 'carbon-components-svelte';
 	import JsonLoader from '../components/JsonLoader.svelte';
 	import type { OrderResponse } from './api/orders';
+	import type {PickjobResponse} from "./api/pickjobs";
 
 	let orderLoading = false;
 	let order: OrderResponse;
@@ -25,12 +26,11 @@
 
 	async function getPickjob(orderId) {
 		pickjobLoading = true;
-		const pickjobResponse = await fetch('/api/pickjobs?orderId=' + orderId).then((res) =>
+		const pickjobResponse : PickjobResponse = await fetch('/api/pickjobs?orderId=' + orderId).then((res) =>
 			res.json()
 		);
 		if (pickjobResponse?.total > 0) {
 			pickjobLoading = false;
-			//TODO: type
 			pickjob = pickjobResponse.pickjobs[0];
 			return;
 		}
