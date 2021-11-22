@@ -3,7 +3,7 @@ import adapter from '@sveltejs/adapter-node';
 import { optimizeImports } from 'carbon-preprocess-svelte';
 
 const config = {
-	preprocess: [optimizeImports(), preprocess()],
+	preprocess: [preprocess(), optimizeImports()],
 	kit: {
 		target: '#svelte',
 		adapter: adapter({
