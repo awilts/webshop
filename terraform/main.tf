@@ -7,9 +7,18 @@ terraform {
   }
 }
 
+data "google_project" "project" {}
+
 locals {
   project  = "wilts-webshop-2"
   location = "europe-west3"
+  secrets  = {
+    auth-key    = "dummy"
+    auth-url    = "dummy"
+    fft-api-url = "dummy"
+    password    = "dummy"
+    user        = "dummy"
+  }
 }
 
 provider "google" {
@@ -77,92 +86,21 @@ resource "google_container_registry" "registry" {
 }
 
 # secrets
-data "google_project" "project" {
-}
-
-resource "google_secret_manager_secret" "auth-key" {
-  secret_id = "auth-key"
-
+resource "google_secret_manager_secret" "secret" {
+  for_each  = local.secrets
+  secret_id = each.key
   replication {
     automatic = true
   }
 }
-resource "google_secret_manager_secret_version" "secret-version-data-auth-key" {
-  secret      = google_secret_manager_secret.auth-key.id
-  secret_data = "dummy"
+resource "google_secret_manager_secret_version" "secret-version-data" {
+  for_each    = local.secrets
+  secret      = google_secret_manager_secret.secret[each.key].id
+  secret_data = each.value
 }
-resource "google_secret_manager_secret_iam_member" "secret-access-auth-key" {
-  project    = data.google_project.project.id
-  secret_id = google_secret_manager_secret.auth-key.id
-  role       = "roles/secretmanager.secretAccessor"
-  member     = "serviceAccount:${data.google_project.project.number}-compute@developer.gserviceaccount.com"
-}
-
-resource "google_secret_manager_secret" "auth-url" {
-  secret_id = "auth-url"
-  replication {
-    automatic = true
-  }
-}
-resource "google_secret_manager_secret_version" "secret-version-data-auth-url" {
-  secret      = google_secret_manager_secret.auth-url.id
-  secret_data = "dummy"
-}
-resource "google_secret_manager_secret_iam_member" "secret-access-auth-url" {
-  project    = data.google_project.project.id
-  secret_id = google_secret_manager_secret.auth-url.id
-  role       = "roles/secretmanager.secretAccessor"
-  member     = "serviceAccount:${data.google_project.project.number}-compute@developer.gserviceaccount.com"
-}
-
-
-resource "google_secret_manager_secret" "password" {
-  secret_id = "password"
-  replication {
-    automatic = true
-  }
-}
-resource "google_secret_manager_secret_version" "secret-version-data-password" {
-  secret      = google_secret_manager_secret.password.id
-  secret_data = "dummy"
-}
-resource "google_secret_manager_secret_iam_member" "secret-access-password" {
-  project    = data.google_project.project.id
-  secret_id = google_secret_manager_secret.password.id
-  role       = "roles/secretmanager.secretAccessor"
-  member     = "serviceAccount:${data.google_project.project.number}-compute@developer.gserviceaccount.com"
-}
-
-resource "google_secret_manager_secret" "user" {
-  secret_id = "user"
-  replication {
-    automatic = true
-  }
-}
-resource "google_secret_manager_secret_version" "secret-version-data-user" {
-  secret      = google_secret_manager_secret.user.id
-  secret_data = "dummy"
-}
-resource "google_secret_manager_secret_iam_member" "secret-access-user" {
-  project    = data.google_project.project.id
-  secret_id = google_secret_manager_secret.user.id
-  role       = "roles/secretmanager.secretAccessor"
-  member     = "serviceAccount:${data.google_project.project.number}-compute@developer.gserviceaccount.com"
-}
-
-resource "google_secret_manager_secret" "fft-api-url" {
-  secret_id = "fft-api-url"
-  replication {
-    automatic = true
-  }
-}
-resource "google_secret_manager_secret_version" "secret-version-data-fft-api-url" {
-  secret      = google_secret_manager_secret.fft-api-url.id
-  secret_data = "dummy"
-}
-resource "google_secret_manager_secret_iam_member" "secret-access-fft-api-url" {
-  project    = data.google_project.project.id
-  secret_id = google_secret_manager_secret.fft-api-url.id
-  role       = "roles/secretmanager.secretAccessor"
-  member     = "serviceAccount:${data.google_project.project.number}-compute@developer.gserviceaccount.com"
+resource "google_secret_manager_secret_iam_member" "secret-access" {
+  for_each  = local.secrets
+  secret_id = google_secret_manager_secret.secret[each.key].id
+  role      = "roles/secretmanager.secretAccessor"
+  member    = "serviceAccount:${data.google_project.project.number}-compute@developer.gserviceaccount.com"
 }
