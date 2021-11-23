@@ -12,17 +12,17 @@ export async function post(serverRequest: ServerRequest): Promise<{ body: any }>
         headers: {
             key: string
             value: string
-        }
+        }[]
     }
 
     const subscriptionCreation: SubscriptionCreation ={
         name: "wilts-webshop",
         event: "PICK_JOB_CREATED",
         callbackUrl: "https://cloudrun-webshop-4dwt5urnqq-ey.a.run.app/api/pickjobs",
-        headers: {
+        headers: [{
             key: "foo-token",
             value: "bar-value"
-        }
+        }]
     }
 
     const subCreationResult = await fetch(process.env['FFT_API_URL'] + 'subscriptions', {
