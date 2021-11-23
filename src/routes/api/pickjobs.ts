@@ -15,7 +15,6 @@ export interface PickjobResponse {
 }
 
 async function getPickjobs(orderId: string) {
-	console.log(2);
 	const authToken = await getAuthToken();
 	return await fetch(process.env['FFT_API_URL'] + 'pickjobs?orderRef=' + orderId, {
 		method: 'GET',
@@ -33,5 +32,14 @@ export async function get({ query }: ServerRequest): Promise<{ body: PickjobResp
 		body: {
 			...pickjobs
 		}
+	};
+}
+
+export async function post(serverRequest: ServerRequest): Promise<{ body: string }> {
+
+	console.log("serverRequest", JSON.stringify(serverRequest.body));
+
+	return {
+		body: "test"
 	};
 }

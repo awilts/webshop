@@ -39,7 +39,6 @@ function getDefaultAddress(): Address {
 }
 
 async function createOrder(order: Order): Promise<OrderResponse> {
-    console.log(1);
     const authToken = await getAuthToken();
     return await fetch(process.env['FFT_API_URL'] + 'orders', {
         method: 'POST',
